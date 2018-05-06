@@ -14,13 +14,21 @@ object Main {
       println()
     }
 
-    println("Balancer")
+    println("\nBalancer")
     println(balance("(if (zero? x) max (/ 1 x))".toList))
     println(balance("I told him (that it's not (yet) done).\n(But he wasn't listening)".toList))
     println(balance(":-)".toList))
     println(balance("())(".toList))
     println(balance(" ( () () )".toList))
     println(balance("((()))(".toList))
+
+    println("\nCounting Change")
+    println(countChange(4,List(1,2))) // 3
+    println(countChange(300,List(5,10,20,50,100,200,500))) // 1022
+    println(countChange(301,List(5,10,20,50,100,200,500))) // 0
+    println(countChange(300,List(500,5,50,100,20,200,10))) // 1022
+    println(countChange(1,List())) // 0
+    println(countChange(0,List(5,10,20,50,100))) // 0
   }
 
   /**
@@ -60,5 +68,29 @@ object Main {
   /**
     * Exercise 3
     */
-  def countChange(money: Int, coins: List[Int]): Int = ???
+  def countChange(money: Int, coins: List[Int]): Int = {
+
+    def countChangeAux(money: Int, coins: List[Int]): Int = {
+      if(money == 0) 1
+      else if(coins.isEmpty) 0
+      else if(money < 0 && coins.nonEmpty) 0
+      else countChangeAux(money - coins.head, coins) + countChangeAux(money, coins.tail)
+    }
+
+    if(coins.isEmpty || money <= 0) 0
+    else countChangeAux(money,coins)
+  }
+
+  def countChangeNonRecursive(money: Int, coins: List[Int]): Int = {
+    val c_array = Array.fill[Int](money + 1)(0)
+    c_array.update(0, 1)
+
+    for(k <- coins) {
+      for(i <- 0 to money - k) {
+        val sum = c_array(i) + c_array(i + k)
+        c_array.update(i + k, sum)
+      }
+    }
+    c_array(money)
+  }
 }
