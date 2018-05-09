@@ -37,13 +37,13 @@ object Exercise2 {
 
     productF
   }
-  product(x => x)(1, 5)
-
-  def productShot(f: Int => Int)(a: Int, b: Int): Int = {
-    if (a > b) 1
-    else f(a) * product(f)(a + 1, b)
-  }
   product(x => x * x)(3, 4)
+
+  def productShort(f: Int => Int)(a: Int, b: Int): Int = {
+    if (a > b) 1
+    else f(a) * productShort(f)(a + 1, b)
+  }
+  productShort(x => x * x)(3, 4)
 
   def fact(n: Int) = product(x => x)(1, n)
   fact(5)
